@@ -1,5 +1,4 @@
-// Cole aqui a URL do Web App publicado no Google Apps Script.
-// Exemplo: https://script.google.com/macros/s/AKfycb.../exec
+// Endpoint público da agenda no Google Apps Script.
 window.AGENDA_CONFIG = {
-  apiUrl: ""
+  apiUrl: "https://script.google.com/macros/s/AKfycbzy2b1h8EKcS78fUzxiFKslhzda7u8gEAi24pRhbfdAxk5oq8eKT7-O34zbvBQvIv-W/exec"
 };
