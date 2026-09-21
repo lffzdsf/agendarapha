@@ -11,6 +11,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@5.12.0/dist/maplibre-gl.css">
   <style>
     :root{--navy:#071a35;--blue:#0b4fb3;--cyan:#05a7dc;--green:#17a05d;--yellow:#f3c72b;--ink:#13223a;--muted:#69788d;--line:#e5ebf2;--bg:#f4f7fb;--card:#fff;--shadow:0 16px 42px rgba(17,35,63,.09)}
     *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:Montserrat,system-ui,sans-serif;color:var(--ink);background:radial-gradient(circle at 12% 0,rgba(5,167,220,.08),transparent 28%),radial-gradient(circle at 92% 12%,rgba(23,160,93,.08),transparent 27%),var(--bg)}
@@ -18,7 +19,7 @@
     .hero{background:linear-gradient(125deg,#071a35,#0a336e 55%,#0b4fb3);color:#fff;border-radius:30px;padding:34px 36px;box-shadow:0 20px 50px rgba(7,26,53,.18);margin-bottom:24px;overflow:hidden;position:relative}.hero:before{content:"";position:absolute;width:260px;height:260px;border-radius:50%;background:rgba(5,167,220,.15);right:-80px;top:-110px}.hero-grid{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(260px,.6fr);gap:30px;align-items:end;position:relative}.eyebrow{font-size:12px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:#8edffa;margin-bottom:10px}h1{font-size:clamp(34px,5vw,60px);line-height:.98;letter-spacing:-.055em;margin:0 0 15px;max-width:760px}.hero p{margin:0;color:rgba(255,255,255,.76);font-size:15px;line-height:1.7;max-width:700px}.today{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.16);backdrop-filter:blur(10px);padding:20px;border-radius:22px}.today b{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.14em;color:#9ee7ff}.today strong{display:block;font-size:28px;letter-spacing:-.04em;margin:4px 0 5px}.today span{color:rgba(255,255,255,.72);font-size:14px;text-transform:capitalize}.today-agenda{margin-top:14px;padding-top:13px;border-top:1px solid rgba(255,255,255,.16);display:flex;flex-direction:column;gap:9px;max-height:190px;overflow:auto}.today-item{display:grid;grid-template-columns:auto 1fr;gap:9px;align-items:start}.today-time{font-size:10px;font-weight:800;color:#9ee7ff;white-space:nowrap;padding-top:2px}.today-info{min-width:0}.today-title{font-size:12px;font-weight:700;line-height:1.35;color:#fff}.today-loc{font-size:10px;line-height:1.35;color:rgba(255,255,255,.62);margin-top:2px}.today-empty{font-size:11px;line-height:1.5;color:rgba(255,255,255,.68)}
     .layout{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(360px,.92fr);gap:24px;align-items:start}.panel{background:#fff;border:1px solid rgba(218,227,237,.9);border-radius:22px;box-shadow:var(--shadow)}.agenda{padding:24px}.head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;margin-bottom:18px}.head h2,.map-head h2{margin:0;font-size:24px;letter-spacing:-.04em}.head p,.map-head p{margin:6px 0 0;color:var(--muted);font-size:12px;line-height:1.5}.tabs{display:flex;gap:8px;flex-wrap:wrap}.tab{border:1px solid var(--line);background:#fff;color:var(--muted);font:inherit;font-size:12px;font-weight:700;padding:9px 12px;border-radius:999px;cursor:pointer}.tab.active{background:var(--navy);border-color:var(--navy);color:#fff}
     .group{margin-top:20px}.group-title{display:flex;align-items:center;gap:10px;margin:22px 0 12px;font-weight:800;font-size:14px}.group-title:after{content:"";height:1px;background:var(--line);flex:1}.group-title span{font-weight:600;color:var(--muted);font-size:12px}.event-list{display:flex;flex-direction:column;gap:10px}.event{display:grid;grid-template-columns:74px minmax(0,1fr) auto;gap:16px;align-items:center;border:1px solid var(--line);border-radius:18px;padding:14px;background:#fff}.event.today-event{border-color:rgba(5,167,220,.45);background:linear-gradient(90deg,rgba(5,167,220,.055),#fff 30%)}.date{text-align:center;background:#f6f8fb;border-radius:14px;padding:8px 6px;border:1px solid #edf1f5}.date .dow{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.12em;color:var(--muted)}.date .day{display:block;font-size:25px;font-weight:800;letter-spacing:-.06em;line-height:1.05;margin:3px 0}.date .mon{font-size:9px;font-weight:700;text-transform:uppercase;color:var(--muted)}.time{font-size:11px;font-weight:800;color:var(--blue);margin-bottom:5px;text-transform:uppercase}.title{font-size:15px;font-weight:800;line-height:1.35;margin-bottom:6px}.loc{font-size:12px;color:var(--muted);line-height:1.45}.status{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;padding:7px 9px;border-radius:999px;background:#f0f4f8;color:#63748a;white-space:nowrap}.status.now{background:rgba(5,167,220,.12);color:#087da4}.status.next{background:rgba(23,160,93,.11);color:#137744}.empty{border:1px dashed #d8e1eb;border-radius:18px;padding:24px;text-align:center;background:#fafbfd;color:var(--muted);font-size:12px;line-height:1.5}.empty strong{display:block;color:var(--ink);font-size:14px;margin-bottom:5px}
-    .map-panel{overflow:hidden;position:sticky;top:18px}.map-head{padding:22px 22px 14px}#map{height:520px;width:100%;background:#dfe8ef}.map-foot{padding:15px 20px 18px;border-top:1px solid var(--line);font-size:11px;color:var(--muted)}.map-foot strong{display:block;color:var(--ink);font-size:12px;margin-bottom:2px}.map-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:11px}.maps-btn{display:inline-flex;align-items:center;gap:7px;text-decoration:none;background:var(--navy);color:#fff!important;font-size:11px;font-weight:800;padding:9px 12px;border-radius:999px}.maps-btn:hover{background:var(--blue)}.route-marker,.car-marker{background:transparent;border:none}.car-bubble{width:68px;height:68px;display:flex;align-items:center;justify-content:center;background:transparent;filter:drop-shadow(0 7px 12px rgba(0,0,0,.30))}.car-bubble img{width:68px;height:68px;object-fit:contain;display:block}.pin{width:30px;height:30px;border-radius:10px 10px 10px 4px;transform:rotate(-45deg);background:var(--green);border:3px solid #fff;box-shadow:0 5px 14px rgba(0,0,0,.22);display:flex;align-items:center;justify-content:center}.pin span{transform:rotate(45deg);font-size:10px;font-weight:800;color:#fff}.pin.current{background:var(--cyan)}
+    .map-panel{overflow:hidden;position:sticky;top:18px}.map-head{padding:22px 22px 14px}#map{height:520px;width:100%;background:#dfe8ef}.map-foot{padding:15px 20px 18px;border-top:1px solid var(--line);font-size:11px;color:var(--muted)}.map-foot strong{display:block;color:var(--ink);font-size:12px;margin-bottom:2px}.map-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:11px}.maps-btn{display:inline-flex;align-items:center;gap:7px;text-decoration:none;background:var(--navy);color:#fff!important;font-size:11px;font-weight:800;padding:9px 12px;border-radius:999px}.maps-btn:hover{background:var(--blue)}.video-btn{border:0;cursor:pointer;background:var(--green);color:#fff;font:inherit;font-size:11px;font-weight:800;padding:9px 12px;border-radius:999px}.video-btn:hover{filter:brightness(.95)}.video-btn:disabled{opacity:.62;cursor:wait}.video-status{margin-top:8px;font-size:10px;color:var(--muted)}.route-marker,.car-marker{background:transparent;border:none}.car-bubble{width:68px;height:68px;display:flex;align-items:center;justify-content:center;background:transparent;filter:drop-shadow(0 7px 12px rgba(0,0,0,.30))}.car-bubble img{width:68px;height:68px;object-fit:contain;display:block}.pin{width:30px;height:30px;border-radius:10px 10px 10px 4px;transform:rotate(-45deg);background:var(--green);border:3px solid #fff;box-shadow:0 5px 14px rgba(0,0,0,.22);display:flex;align-items:center;justify-content:center}.pin span{transform:rotate(45deg);font-size:10px;font-weight:800;color:#fff}.pin.current{background:var(--cyan)}
     footer{display:flex;justify-content:space-between;gap:18px;align-items:center;margin-top:20px;padding:0 4px;color:var(--muted);font-size:11px}footer a{color:var(--blue);font-weight:700;text-decoration:none}
     @media(max-width:980px){.hero-grid,.layout{grid-template-columns:1fr}.map-panel{position:relative;top:auto;order:-1}#map{height:420px}.hero{padding:28px}.today{max-width:340px}}
     @media(max-width:640px){.shell{padding:16px 12px 30px}.updated{display:none}.hero{padding:24px 20px;border-radius:24px}.head{align-items:flex-start;flex-direction:column}.agenda{padding:18px}.event{grid-template-columns:60px minmax(0,1fr)}.status{grid-column:2;justify-self:start}#map{height:360px}footer{align-items:flex-start;flex-direction:column}}
@@ -75,6 +76,7 @@
 
   <script src="./config.js"></script>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/maplibre-gl@5.12.0/dist/maplibre-gl.js"></script>
   <script>
     var TZ='America/Sao_Paulo';
     var SNAPSHOT={
@@ -92,7 +94,7 @@
     var state={events:[],filter:'today',now:new Date()};
     var map=L.map('map',{scrollWheelZoom:false}).setView([-18.65,-44.25],6);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18,attribution:'&copy; OpenStreetMap'}).addTo(map);
-    var markerLayer=L.layerGroup().addTo(map),routeLayer=L.layerGroup().addTo(map);var carMarker=null,carAnimationFrame=null,mapRenderToken=0;
+    var markerLayer=L.layerGroup().addTo(map),routeLayer=L.layerGroup().addTo(map);var carMarker=null,carAnimationFrame=null,mapRenderToken=0;var latestRoadCoords=[],latestRouteEvents=[];
 
     var fmtDate=new Intl.DateTimeFormat('pt-BR',{day:'2-digit',month:'long',timeZone:TZ});
     var fmtWeek=new Intl.DateTimeFormat('pt-BR',{weekday:'long',timeZone:TZ});
@@ -181,6 +183,7 @@
     }
     async function renderMap(){
       var token=++mapRenderToken;
+      latestRoadCoords=[];latestRouteEvents=[];
       stopCarAnimation();
       markerLayer.clearLayers();routeLayer.clearLayers();
       var m=state.events.filter(function(e){return Number.isFinite(Number(e.lat))&&Number.isFinite(Number(e.lng))}).sort(function(a,b){return new Date(a.start)-new Date(b.start)});
@@ -214,17 +217,177 @@
         var route=data.routes[0];
         L.geoJSON(route.geometry,{style:{color:'#17a05d',weight:5,opacity:.9,lineCap:'round',lineJoin:'round'}}).addTo(routeLayer);
         var roadCoords=route.geometry.coordinates;
+        latestRoadCoords=roadCoords||[];latestRouteEvents=sel.slice();
         if(roadCoords&&roadCoords.length>1){
           var roadBounds=L.latLngBounds(roadCoords.map(function(p){return[p[1],p[0]]}));
           map.fitBounds(roadBounds.pad(.08),{maxZoom:9});
           animateCar(roadCoords,token);
         }
         document.getElementById('mapSubtitle').textContent='Trajeto rodoviário dos próximos compromissos.';
-        document.getElementById('mapFoot').innerHTML='<strong>Rota pelas estradas</strong>'+routeMeta(route.distance,route.duration)+' • '+sel.length+' destinos.<div class="map-actions"><a class="maps-btn" href="'+mapsUrl+'" target="_blank" rel="noopener">↗ Abrir roteiro no Google Maps</a></div>';
+        document.getElementById('mapFoot').innerHTML='<strong>Rota pelas estradas</strong>'+routeMeta(route.distance,route.duration)+' • '+sel.length+' destinos.<div class="map-actions"><a class="maps-btn" href="'+mapsUrl+'" target="_blank" rel="noopener">↗ Abrir roteiro no Google Maps</a><button class="video-btn" id="videoDownloadBtn" type="button" onclick="downloadRouteVideo()">↓ Baixar vídeo 1080×1920</button></div><div class="video-status" id="videoStatus"></div>';
       }catch(err){
         if(token!==mapRenderToken)return;
         document.getElementById('mapSubtitle').textContent='Destinos da agenda; cálculo rodoviário temporariamente indisponível.';
         document.getElementById('mapFoot').innerHTML='<strong>Rota não carregada no mapa</strong>Os pontos continuam disponíveis e o roteiro pode ser aberto no Google Maps.<div class="map-actions"><a class="maps-btn" href="'+mapsUrl+'" target="_blank" rel="noopener">↗ Abrir roteiro no Google Maps</a></div>';
+      }
+    }
+
+    function geoDistance(a,b){
+      var r=6371000,la1=a[1]*Math.PI/180,la2=b[1]*Math.PI/180,dla=(b[1]-a[1])*Math.PI/180,dlo=(b[0]-a[0])*Math.PI/180;
+      var h=Math.sin(dla/2)*Math.sin(dla/2)+Math.cos(la1)*Math.cos(la2)*Math.sin(dlo/2)*Math.sin(dlo/2);
+      return 2*r*Math.atan2(Math.sqrt(h),Math.sqrt(1-h));
+    }
+    function routeMetrics(coords){
+      var cum=[0],total=0;
+      for(var i=1;i<coords.length;i++){total+=geoDistance(coords[i-1],coords[i]);cum.push(total)}
+      return{cum:cum,total:total};
+    }
+    function routePointAt(coords,metrics,fraction){
+      var target=metrics.total*Math.max(0,Math.min(1,fraction)),i=1;
+      while(i<metrics.cum.length&&metrics.cum[i]<target)i++;
+      if(i>=coords.length)i=coords.length-1;
+      var p=Math.max(0,i-1),seg=metrics.cum[i]-metrics.cum[p]||1,t=(target-metrics.cum[p])/seg;
+      return[
+        coords[p][0]+(coords[i][0]-coords[p][0])*t,
+        coords[p][1]+(coords[i][1]-coords[p][1])*t,
+        i
+      ];
+    }
+    function routeBearing(a,b){
+      var p1=a[1]*Math.PI/180,p2=b[1]*Math.PI/180,dl=(b[0]-a[0])*Math.PI/180;
+      var y=Math.sin(dl)*Math.cos(p2),x=Math.cos(p1)*Math.sin(p2)-Math.sin(p1)*Math.cos(p2)*Math.cos(dl);
+      return(Math.atan2(y,x)*180/Math.PI+360)%360;
+    }
+    function nearestRouteIndex(coord,route){
+      var best=0,dist=Infinity;
+      for(var i=0;i<route.length;i++){var d=(coord[0]-route[i][0])*(coord[0]-route[i][0])+(coord[1]-route[i][1])*(coord[1]-route[i][1]);if(d<dist){dist=d;best=i}}
+      return best;
+    }
+    function loadExportLogo(){
+      return new Promise(function(resolve,reject){
+        var img=new Image();img.onload=function(){resolve(img)};img.onerror=reject;img.src='./raphael-1038.png';
+      });
+    }
+    function recorderFormat(){
+      var list=[
+        {mime:'video/mp4;codecs=avc1.42E01E',ext:'mp4'},
+        {mime:'video/mp4',ext:'mp4'},
+        {mime:'video/webm;codecs=vp9',ext:'webm'},
+        {mime:'video/webm;codecs=vp8',ext:'webm'},
+        {mime:'video/webm',ext:'webm'}
+      ];
+      for(var i=0;i<list.length;i++){if(!window.MediaRecorder||!MediaRecorder.isTypeSupported||MediaRecorder.isTypeSupported(list[i].mime))return list[i]}
+      return null;
+    }
+    async function downloadRouteVideo(){
+      var btn=document.getElementById('videoDownloadBtn'),statusEl=document.getElementById('videoStatus');
+      if(!latestRoadCoords||latestRoadCoords.length<2){if(statusEl)statusEl.textContent='A rota ainda não está pronta para exportação.';return}
+      if(!window.maplibregl||!HTMLCanvasElement.prototype.captureStream||!window.MediaRecorder){if(statusEl)statusEl.textContent='Este navegador não oferece suporte à exportação de vídeo.';return}
+      var format=recorderFormat();
+      if(!format){if(statusEl)statusEl.textContent='Formato de vídeo não suportado neste navegador.';return}
+      if(btn){btn.disabled=true;btn.textContent='Gerando vídeo…'}
+      if(statusEl)statusEl.textContent='Preparando mapa 3D…';
+      var host=document.createElement('div');
+      host.style.cssText='position:fixed;left:-12000px;top:0;width:1080px;height:1920px;pointer-events:none;overflow:hidden;';
+      document.body.appendChild(host);
+      var videoMap=null,url=null;
+      try{
+        var route=latestRoadCoords.slice(),metrics=routeMetrics(route),logo=await loadExportLogo();
+        var start=route[0],next=route[Math.min(5,route.length-1)];
+        videoMap=new maplibregl.Map({
+          container:host,
+          style:'https://tiles.openfreemap.org/styles/liberty',
+          center:start,
+          zoom:11.4,
+          pitch:60,
+          bearing:routeBearing(start,next),
+          interactive:false,
+          attributionControl:false,
+          maplibreLogo:false,
+          pixelRatio:1,
+          canvasContextAttributes:{preserveDrawingBuffer:true,antialias:true}
+        });
+        await new Promise(function(resolve,reject){
+          var timer=setTimeout(function(){reject(new Error('Tempo esgotado ao carregar mapa'))},20000);
+          videoMap.once('load',function(){clearTimeout(timer);resolve()});
+          videoMap.once('error',function(e){if(e&&e.error&&String(e.error).indexOf('404')<0){}});
+        });
+        videoMap.addSource('video-route',{type:'geojson',data:{type:'Feature',geometry:{type:'LineString',coordinates:route},properties:{}}});
+        videoMap.addLayer({id:'video-route-shadow',type:'line',source:'video-route',paint:{'line-color':'#ffffff','line-width':13,'line-opacity':.88}});
+        videoMap.addLayer({id:'video-route-line',type:'line',source:'video-route',paint:{'line-color':'#17a05d','line-width':8,'line-opacity':1}});
+        try{
+          var layers=videoMap.getStyle().layers||[],firstSymbol=null;
+          for(var li=0;li<layers.length;li++){if(layers[li].type==='symbol'){firstSymbol=layers[li].id;break}}
+          videoMap.addLayer({
+            id:'video-3d-buildings',type:'fill-extrusion',source:'openmaptiles','source-layer':'building',minzoom:12,
+            paint:{
+              'fill-extrusion-color':'#d8dee8',
+              'fill-extrusion-height':['to-number',['get','render_height'],8],
+              'fill-extrusion-base':['to-number',['get','render_min_height'],0],
+              'fill-extrusion-opacity':.68
+            }
+          },firstSymbol||undefined);
+        }catch(e){}
+        await new Promise(function(resolve){setTimeout(resolve,2200)});
+        var out=document.createElement('canvas');out.width=1080;out.height=1920;
+        var ctx=out.getContext('2d',{alpha:false});
+        var stream=out.captureStream(30),chunks=[];
+        var recorder=new MediaRecorder(stream,{mimeType:format.mime,videoBitsPerSecond:12000000});
+        recorder.ondataavailable=function(e){if(e.data&&e.data.size)chunks.push(e.data)};
+        var stops=(latestRouteEvents||[]).map(function(e){
+          return{event:e,index:nearestRouteIndex([Number(e.lng),Number(e.lat)],route)};
+        }).sort(function(a,b){return a.index-b.index});
+        var duration=12000,started=performance.now();
+        function currentStop(idx){
+          var chosen=stops.length?stops[0]:null;
+          for(var i=0;i<stops.length;i++){if(stops[i].index<=idx)chosen=stops[i];else break}
+          return chosen?chosen.event:null;
+        }
+        function roundedRect(x,y,w,h,r){
+          ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath();
+        }
+        function drawFrame(now){
+          var raw=Math.min(1,(now-started)/duration),ease=raw<.5?2*raw*raw:1-Math.pow(-2*raw+2,2)/2;
+          var pos=routePointAt(route,metrics,ease),idx=pos[2],a=route[Math.max(0,idx-2)],b=route[Math.min(route.length-1,idx+2)],bearing=routeBearing(a,b);
+          videoMap.jumpTo({center:[pos[0],pos[1]],zoom:11.7,pitch:60,bearing:bearing});
+          videoMap.triggerRepaint();
+          requestAnimationFrame(function(){
+            ctx.fillStyle='#071a35';ctx.fillRect(0,0,1080,1920);
+            try{ctx.drawImage(videoMap.getCanvas(),0,0,1080,1920)}catch(e){}
+            var g=ctx.createLinearGradient(0,0,0,440);g.addColorStop(0,'rgba(7,26,53,.94)');g.addColorStop(1,'rgba(7,26,53,0)');ctx.fillStyle=g;ctx.fillRect(0,0,1080,440);
+            var gb=ctx.createLinearGradient(0,1450,0,1920);gb.addColorStop(0,'rgba(7,26,53,0)');gb.addColorStop(1,'rgba(7,26,53,.93)');ctx.fillStyle=gb;ctx.fillRect(0,1400,1080,520);
+            ctx.drawImage(logo,54,52,170,170);
+            ctx.fillStyle='#fff';ctx.font='800 56px Montserrat, Arial';ctx.fillText('Caminhada do Raphael',245,115);
+            ctx.fillStyle='#9ee7ff';ctx.font='700 29px Montserrat, Arial';ctx.fillText('ROTA POR MINAS GERAIS',248,162);
+            var ev=currentStop(idx);
+            if(ev){
+              roundedRect(54,1540,972,230,34);ctx.fillStyle='rgba(7,26,53,.86)';ctx.fill();
+              ctx.fillStyle='#8edffa';ctx.font='800 26px Montserrat, Arial';ctx.fillText(ev.allDay?'HOJE NA ROTA':timeText(ev).toUpperCase(),92,1600);
+              ctx.fillStyle='#fff';ctx.font='800 43px Montserrat, Arial';
+              var title=String(ev.title||'Próximo compromisso');if(title.length>35)title=title.slice(0,33)+'…';ctx.fillText(title,92,1660);
+              if(ev.location){ctx.fillStyle='rgba(255,255,255,.78)';ctx.font='600 25px Montserrat, Arial';var loc=String(ev.location);if(loc.length>52)loc=loc.slice(0,50)+'…';ctx.fillText(loc,92,1708)}
+            }
+            roundedRect(470,880,140,140,70);ctx.fillStyle='rgba(255,255,255,.96)';ctx.fill();ctx.drawImage(logo,480,890,120,120);
+            ctx.fillStyle='rgba(255,255,255,.7)';ctx.font='500 18px Arial';ctx.fillText('OpenFreeMap © OpenMapTiles • OpenStreetMap contributors',54,1882);
+            if(statusEl)statusEl.textContent='Gerando vídeo… '+Math.round(raw*100)+'%';
+            if(raw<1)requestAnimationFrame(drawFrame);else setTimeout(function(){recorder.stop()},250);
+          });
+        }
+        var done=new Promise(function(resolve){recorder.onstop=resolve});
+        recorder.start(1000);
+        requestAnimationFrame(drawFrame);
+        await done;
+        var blob=new Blob(chunks,{type:format.mime}),name='caminhada-raphael-1080x1920.'+format.ext;
+        url=URL.createObjectURL(blob);
+        var a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();
+        if(statusEl)statusEl.textContent='Vídeo pronto. Download iniciado.';
+      }catch(err){
+        if(statusEl)statusEl.textContent='Não foi possível gerar o vídeo: '+(err&&err.message?err.message:'erro inesperado');
+      }finally{
+        if(btn){btn.disabled=false;btn.textContent='↓ Baixar vídeo 1080×1920'}
+        if(videoMap)try{videoMap.remove()}catch(e){}
+        host.remove();
+        if(url)setTimeout(function(){URL.revokeObjectURL(url)},5000);
       }
     }
     function apply(data){
