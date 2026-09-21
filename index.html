@@ -45,9 +45,8 @@
         <div class="head">
           <div><h2>Agenda</h2><p>Sincronizada automaticamente com o Google Calendar.</p></div>
           <div class="tabs">
-            <button class="tab active" data-filter="all">Visão geral</button>
-            <button class="tab" data-filter="today">Hoje</button>
-            <button class="tab" data-filter="upcoming">Próximos</button>
+            <button class="tab active" data-filter="today">Hoje</button>
+            <button class="tab" data-filter="upcoming">Próximos dias</button>
           </div>
         </div>
         <div id="agenda"></div>
@@ -82,7 +81,7 @@
         {id:'eleicoes',title:'Eleições',start:'2026-10-04T00:00:00-03:00',end:'2026-10-05T00:00:00-03:00',allDay:true,location:'',lat:null,lng:null}
       ]
     };
-    var state={events:[],filter:'all',now:new Date()};
+    var state={events:[],filter:'today',now:new Date()};
     var map=L.map('map',{scrollWheelZoom:false}).setView([-18.65,-44.25],6);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18,attribution:'&copy; OpenStreetMap'}).addTo(map);
     var markerLayer=L.layerGroup().addTo(map),routeLayer=L.layerGroup().addTo(map);
