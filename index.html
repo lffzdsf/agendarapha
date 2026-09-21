@@ -122,9 +122,9 @@
     function renderMap(){
       markerLayer.clearLayers();routeLayer.clearLayers();
       var m=state.events.filter(function(e){return Number.isFinite(Number(e.lat))&&Number.isFinite(Number(e.lng))}).sort(function(a,b){return new Date(a.start)-new Date(b.start)});
-      var up=m.filter(function(e){return !isPast(e)}),sel=up.length?up:m.slice(-5),mode=up.length?'Próximos deslocamentos':'Últimos deslocamentos cadastrados';
-      document.getElementById('mapSubtitle').textContent=sel.length?mode+' a partir da agenda.':'Nenhum local mapeável cadastrado no momento.';
-      document.getElementById('mapFoot').innerHTML='<strong>'+mode+'</strong>'+(sel.length?sel.length+' ponto'+(sel.length>1?'s':'')+' no mapa.':'Cadastre uma cidade ou endereço no evento.');
+      var sel=m.filter(function(e){return !isPast(e)}),mode='Hoje e próximos deslocamentos';
+      document.getElementById('mapSubtitle').textContent=sel.length?mode+' a partir da agenda.':'Nenhum compromisso de hoje em diante possui local mapeável.';
+      document.getElementById('mapFoot').innerHTML='<strong>'+mode+'</strong>'+(sel.length?sel.length+' ponto'+(sel.length>1?'s':'')+' no mapa.':'Cadastre uma cidade ou endereço nos próximos eventos.');
       if(!sel.length){map.setView([-18.65,-44.25],6);return}
       var pts=[];
       sel.forEach(function(e,i){var lat=Number(e.lat),lng=Number(e.lng);pts.push([lat,lng]);var icon=L.divIcon({className:'route-marker',html:'<div class="pin '+(isToday(e)?'current':'')+'"><span>'+(i+1)+'</span></div>',iconSize:[30,30],iconAnchor:[9,26],popupAnchor:[5,-24]});L.marker([lat,lng],{icon:icon}).bindPopup('<strong>'+esc(e.title)+'</strong><br>'+esc(e.location||'Minas Gerais')+'<br><small>'+esc(fmtDate.format(new Date(e.start)))+'</small>').addTo(markerLayer)});
