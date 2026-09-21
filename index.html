@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Agenda | Raphael Mota</title>
+  <title>Caminhada do Raphael | Agenda</title>
   <meta name="description" content="Agenda pública de compromissos e deslocamentos de Raphael Mota por Minas Gerais.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -25,16 +25,16 @@
 <body>
   <main class="shell">
     <header class="top">
-      <div class="brand"><div class="mark"></div><div>Raphael Mota<small>Agenda pública</small></div></div>
+      <div class="brand"><div class="mark"></div><div>Caminhada do Raphael<small>Agenda sincronizada</small></div></div>
       <div class="updated" id="updated">Atualizando agenda…</div>
     </header>
 
     <section class="hero">
       <div class="hero-grid">
         <div>
-          <div class="eyebrow">Agenda por Minas Gerais</div>
-          <h1>Onde Raphael está e quais são os próximos compromissos.</h1>
-          <p>Datas, cidades, horários e a sequência dos deslocamentos cadastrados na agenda compartilhada.</p>
+          <div class="eyebrow">Caminhada do Raphael</div>
+          <h1>Agenda e rota por Minas Gerais.</h1>
+          <p>Compromissos, cidades, horários e deslocamentos sincronizados automaticamente com o Google Calendar.</p>
         </div>
         <div class="today"><b>Hoje</b><strong id="todayDate">—</strong><span id="todayWeek">—</span></div>
       </div>
@@ -43,7 +43,7 @@
     <section class="layout">
       <div class="panel agenda">
         <div class="head">
-          <div><h2>Agenda</h2><p>Compromissos cadastrados no Google Calendar.</p></div>
+          <div><h2>Agenda</h2><p>Sincronizada automaticamente com o Google Calendar.</p></div>
           <div class="tabs">
             <button class="tab active" data-filter="all">Visão geral</button>
             <button class="tab" data-filter="today">Hoje</button>
@@ -61,7 +61,7 @@
     </section>
 
     <footer>
-      <span>Os compromissos exibidos são os cadastrados na agenda compartilhada.</span>
+      <span>Sincronização automática com a agenda compartilhada do Google Calendar.</span>
       <a href="https://calendar.google.com/calendar/embed?src=fc142fad8373709f04073ac360daa0b2685aef89f98efc130300574a879c183c%40group.calendar.google.com&ctz=America%2FSao_Paulo" target="_blank" rel="noopener">Abrir calendário original</a>
     </footer>
   </main>
@@ -136,22 +136,51 @@
       if(data.now)state.now=new Date(data.now);
       document.getElementById('todayDate').textContent=fmtDate.format(state.now);
       document.getElementById('todayWeek').textContent=cap(fmtWeek.format(state.now));
-      document.getElementById('updated').textContent=data.mode==='snapshot'?'Prévia • integração pendente':'Atualizado '+fmtTime.format(new Date(data.updatedAt||Date.now()));
+      document.getElementById('updated').textContent=data.mode==='snapshot'?'Prévia • integração indisponível':'Sincronizado '+fmtTime.format(new Date(data.updatedAt||Date.now()));
       renderAgenda();renderMap()
     }
     document.querySelectorAll('.tab').forEach(function(btn){btn.addEventListener('click',function(){document.querySelectorAll('.tab').forEach(function(b){b.classList.remove('active')});btn.classList.add('active');state.filter=btn.getAttribute('data-filter');renderAgenda()})});
+    var lastSyncAt=0;
+    var syncInProgress=false;
+    function syncFailure(){
+      if(!state.events.length){
+        SNAPSHOT.now=new Date().toISOString();
+        apply(SNAPSHOT);
+      }else{
+        document.getElementById('updated').textContent='Sem conexão • nova tentativa automática';
+      }
+    }
     function load(){
+      if(syncInProgress)return;
       var api=String((window.AGENDA_CONFIG&&window.AGENDA_CONFIG.apiUrl)||'').trim();
-      if(!api){SNAPSHOT.now=new Date().toISOString();apply(SNAPSHOT);return}
+      if(!api){syncFailure();return}
+      syncInProgress=true;
+      document.getElementById('updated').textContent='Sincronizando…';
       var cb='__agendaRaphael_'+Date.now()+'_'+Math.floor(Math.random()*100000),s=document.createElement('script'),done=false,timer;
-      function cleanup(){if(done)return;done=true;if(timer)clearTimeout(timer);try{delete window[cb]}catch(e){window[cb]=undefined}if(s.parentNode)s.parentNode.removeChild(s)}
-      window[cb]=function(data){cleanup();if(data&&!data.error){data.mode='live';apply(data)}else{SNAPSHOT.now=new Date().toISOString();apply(SNAPSHOT)}};
-      s.onerror=function(){cleanup();SNAPSHOT.now=new Date().toISOString();apply(SNAPSHOT)};
+      function cleanup(){if(done)return;done=true;syncInProgress=false;if(timer)clearTimeout(timer);try{delete window[cb]}catch(e){window[cb]=undefined}if(s.parentNode)s.parentNode.removeChild(s)}
+      window[cb]=function(data){
+        cleanup();
+        if(data&&!data.error){
+          data.mode='live';
+          lastSyncAt=Date.now();
+          apply(data);
+        }else{
+          syncFailure();
+        }
+      };
+      s.onerror=function(){cleanup();syncFailure()};
       s.src=api+(api.indexOf('?')>=0?'&':'?')+'callback='+encodeURIComponent(cb)+'&t='+Date.now();
       document.head.appendChild(s);
-      timer=setTimeout(function(){cleanup();SNAPSHOT.now=new Date().toISOString();apply(SNAPSHOT)},12000)
+      timer=setTimeout(function(){cleanup();syncFailure()},12000)
     }
     load();
+    setInterval(load,120000);
+    document.addEventListener('visibilitychange',function(){
+      if(!document.hidden&&Date.now()-lastSyncAt>30000)load();
+    });
+    window.addEventListener('focus',function(){
+      if(Date.now()-lastSyncAt>30000)load();
+    });
   </script>
 </body>
 </html>
