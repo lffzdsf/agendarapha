@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Agenda | Raphael Mota</title>
+  <meta name="description" content="Agenda pública de compromissos e deslocamentos de Raphael Mota por Minas Gerais.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <style>
+    :root{--navy:#071a35;--blue:#0b4fb3;--cyan:#05a7dc;--green:#17a05d;--yellow:#f3c72b;--ink:#13223a;--muted:#69788d;--line:#e5ebf2;--bg:#f4f7fb;--card:#fff;--shadow:0 16px 42px rgba(17,35,63,.09)}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:Montserrat,system-ui,sans-serif;color:var(--ink);background:radial-gradient(circle at 12% 0,rgba(5,167,220,.08),transparent 28%),radial-gradient(circle at 92% 12%,rgba(23,160,93,.08),transparent 27%),var(--bg)}
+    .shell{max-width:1280px;margin:auto;padding:28px 24px 44px}.top{display:flex;justify-content:space-between;align-items:center;gap:18px;margin-bottom:22px}.brand{display:flex;gap:12px;align-items:center;font-weight:800}.mark{width:42px;height:42px;border-radius:14px;background:linear-gradient(135deg,var(--blue),var(--cyan));box-shadow:0 8px 20px rgba(11,79,179,.2);position:relative}.mark:after{content:"";position:absolute;width:14px;height:14px;border-radius:4px;background:var(--yellow);right:-3px;bottom:-3px;transform:rotate(12deg)}.brand small{display:block;margin-top:2px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}.updated{font-size:12px;color:var(--muted);background:#fff;border:1px solid var(--line);padding:10px 13px;border-radius:999px}
+    .hero{background:linear-gradient(125deg,#071a35,#0a336e 55%,#0b4fb3);color:#fff;border-radius:30px;padding:34px 36px;box-shadow:0 20px 50px rgba(7,26,53,.18);margin-bottom:24px;overflow:hidden;position:relative}.hero:before{content:"";position:absolute;width:260px;height:260px;border-radius:50%;background:rgba(5,167,220,.15);right:-80px;top:-110px}.hero-grid{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(260px,.6fr);gap:30px;align-items:end;position:relative}.eyebrow{font-size:12px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:#8edffa;margin-bottom:10px}h1{font-size:clamp(34px,5vw,60px);line-height:.98;letter-spacing:-.055em;margin:0 0 15px;max-width:760px}.hero p{margin:0;color:rgba(255,255,255,.76);font-size:15px;line-height:1.7;max-width:700px}.today{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.16);backdrop-filter:blur(10px);padding:20px;border-radius:22px}.today b{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.14em;color:#9ee7ff}.today strong{display:block;font-size:28px;letter-spacing:-.04em;margin:4px 0 5px}.today span{color:rgba(255,255,255,.72);font-size:14px;text-transform:capitalize}
+    .layout{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(360px,.92fr);gap:24px;align-items:start}.panel{background:#fff;border:1px solid rgba(218,227,237,.9);border-radius:22px;box-shadow:var(--shadow)}.agenda{padding:24px}.head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;margin-bottom:18px}.head h2,.map-head h2{margin:0;font-size:24px;letter-spacing:-.04em}.head p,.map-head p{margin:6px 0 0;color:var(--muted);font-size:12px;line-height:1.5}.tabs{display:flex;gap:8px;flex-wrap:wrap}.tab{border:1px solid var(--line);background:#fff;color:var(--muted);font:inherit;font-size:12px;font-weight:700;padding:9px 12px;border-radius:999px;cursor:pointer}.tab.active{background:var(--navy);border-color:var(--navy);color:#fff}
+    .group{margin-top:20px}.group-title{display:flex;align-items:center;gap:10px;margin:22px 0 12px;font-weight:800;font-size:14px}.group-title:after{content:"";height:1px;background:var(--line);flex:1}.group-title span{font-weight:600;color:var(--muted);font-size:12px}.event-list{display:flex;flex-direction:column;gap:10px}.event{display:grid;grid-template-columns:74px minmax(0,1fr) auto;gap:16px;align-items:center;border:1px solid var(--line);border-radius:18px;padding:14px;background:#fff}.event.today-event{border-color:rgba(5,167,220,.45);background:linear-gradient(90deg,rgba(5,167,220,.055),#fff 30%)}.date{text-align:center;background:#f6f8fb;border-radius:14px;padding:8px 6px;border:1px solid #edf1f5}.date .dow{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.12em;color:var(--muted)}.date .day{display:block;font-size:25px;font-weight:800;letter-spacing:-.06em;line-height:1.05;margin:3px 0}.date .mon{font-size:9px;font-weight:700;text-transform:uppercase;color:var(--muted)}.time{font-size:11px;font-weight:800;color:var(--blue);margin-bottom:5px;text-transform:uppercase}.title{font-size:15px;font-weight:800;line-height:1.35;margin-bottom:6px}.loc{font-size:12px;color:var(--muted);line-height:1.45}.status{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;padding:7px 9px;border-radius:999px;background:#f0f4f8;color:#63748a;white-space:nowrap}.status.now{background:rgba(5,167,220,.12);color:#087da4}.status.next{background:rgba(23,160,93,.11);color:#137744}.empty{border:1px dashed #d8e1eb;border-radius:18px;padding:24px;text-align:center;background:#fafbfd;color:var(--muted);font-size:12px;line-height:1.5}.empty strong{display:block;color:var(--ink);font-size:14px;margin-bottom:5px}
+    .map-panel{overflow:hidden;position:sticky;top:18px}.map-head{padding:22px 22px 14px}#map{height:520px;width:100%;background:#dfe8ef}.map-foot{padding:15px 20px 18px;border-top:1px solid var(--line);font-size:11px;color:var(--muted)}.map-foot strong{display:block;color:var(--ink);font-size:12px;margin-bottom:2px}.route-marker{background:transparent;border:none}.pin{width:30px;height:30px;border-radius:10px 10px 10px 4px;transform:rotate(-45deg);background:var(--green);border:3px solid #fff;box-shadow:0 5px 14px rgba(0,0,0,.22);display:flex;align-items:center;justify-content:center}.pin span{transform:rotate(45deg);font-size:10px;font-weight:800;color:#fff}.pin.current{background:var(--cyan)}
+    footer{display:flex;justify-content:space-between;gap:18px;align-items:center;margin-top:20px;padding:0 4px;color:var(--muted);font-size:11px}footer a{color:var(--blue);font-weight:700;text-decoration:none}
+    @media(max-width:980px){.hero-grid,.layout{grid-template-columns:1fr}.map-panel{position:relative;top:auto;order:-1}#map{height:420px}.hero{padding:28px}.today{max-width:340px}}
+    @media(max-width:640px){.shell{padding:16px 12px 30px}.updated{display:none}.hero{padding:24px 20px;border-radius:24px}.head{align-items:flex-start;flex-direction:column}.agenda{padding:18px}.event{grid-template-columns:60px minmax(0,1fr)}.status{grid-column:2;justify-self:start}#map{height:360px}footer{align-items:flex-start;flex-direction:column}}
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header class="top">
+      <div class="brand"><div class="mark"></div><div>Raphael Mota<small>Agenda pública</small></div></div>
+      <div class="updated" id="updated">Atualizando agenda…</div>
+    </header>
+
+    <section class="hero">
+      <div class="hero-grid">
+        <div>
+          <div class="eyebrow">Agenda por Minas Gerais</div>
+          <h1>Onde Raphael está e quais são os próximos compromissos.</h1>
+          <p>Datas, cidades, horários e a sequência dos deslocamentos cadastrados na agenda compartilhada.</p>
+        </div>
+        <div class="today"><b>Hoje</b><strong id="todayDate">—</strong><span id="todayWeek">—</span></div>
+      </div>
+    </section>
+
+    <section class="layout">
+      <div class="panel agenda">
+        <div class="head">
+          <div><h2>Agenda</h2><p>Compromissos cadastrados no Google Calendar.</p></div>
+          <div class="tabs">
+            <button class="tab active" data-filter="all">Visão geral</button>
+            <button class="tab" data-filter="today">Hoje</button>
+            <button class="tab" data-filter="upcoming">Próximos</button>
+          </div>
+        </div>
+        <div id="agenda"></div>
+      </div>
+
+      <aside class="panel map-panel">
+        <div class="map-head"><h2>Rota por Minas</h2><p id="mapSubtitle">Carregando os deslocamentos…</p></div>
+        <div id="map"></div>
+        <div class="map-foot" id="mapFoot"><strong>Rota da agenda</strong>Locais com cidade ou endereço cadastrado.</div>
+      </aside>
+    </section>
+
+    <footer>
+      <span>Os compromissos exibidos são os cadastrados na agenda compartilhada.</span>
+      <a href="https://calendar.google.com/calendar/embed?src=fc142fad8373709f04073ac360daa0b2685aef89f98efc130300574a879c183c%40group.calendar.google.com&ctz=America%2FSao_Paulo" target="_blank" rel="noopener">Abrir calendário original</a>
+    </footer>
+  </main>
+
+  <script src="./config.js"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+    var TZ='America/Sao_Paulo';
+    var SNAPSHOT={
+      mode:'snapshot',
+      updatedAt:'2026-09-21T09:31:00-03:00',
+      now:new Date().toISOString(),
+      events:[
+        {id:'diamantina',title:'Diamantina',start:'2026-09-15T00:00:00-03:00',end:'2026-09-16T00:00:00-03:00',allDay:true,location:'Diamantina - MG',lat:-18.2413,lng:-43.6031},
+        {id:'gv',title:'Governador Valadares',start:'2026-09-16T00:00:00-03:00',end:'2026-09-17T00:00:00-03:00',allDay:true,location:'Governador Valadares - MG',lat:-18.8549,lng:-41.9559},
+        {id:'ouro',title:'Simpósio Saúde Bucal Ouro Branco',start:'2026-09-18T00:00:00-03:00',end:'2026-09-19T00:00:00-03:00',allDay:true,location:'Ouro Branco - MG',lat:-20.5233,lng:-43.6947},
+        {id:'brejo',title:'Cavalhada do Brejo do Amparo',start:'2026-09-18T00:00:00-03:00',end:'2026-09-21T00:00:00-03:00',allDay:true,location:'Brejo do Amparo, Januária - MG',lat:-15.4796,lng:-44.3653},
+        {id:'eleicoes',title:'Eleições',start:'2026-10-04T00:00:00-03:00',end:'2026-10-05T00:00:00-03:00',allDay:true,location:'',lat:null,lng:null}
+      ]
+    };
+    var state={events:[],filter:'all',now:new Date()};
+    var map=L.map('map',{scrollWheelZoom:false}).setView([-18.65,-44.25],6);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18,attribution:'&copy; OpenStreetMap'}).addTo(map);
+    var markerLayer=L.layerGroup().addTo(map),routeLayer=L.layerGroup().addTo(map);
+
+    var fmtDate=new Intl.DateTimeFormat('pt-BR',{day:'2-digit',month:'long',timeZone:TZ});
+    var fmtWeek=new Intl.DateTimeFormat('pt-BR',{weekday:'long',timeZone:TZ});
+    var fmtDay=new Intl.DateTimeFormat('pt-BR',{day:'2-digit',timeZone:TZ});
+    var fmtMon=new Intl.DateTimeFormat('pt-BR',{month:'short',timeZone:TZ});
+    var fmtTime=new Intl.DateTimeFormat('pt-BR',{hour:'2-digit',minute:'2-digit',timeZone:TZ});
+
+    function cap(s){return s?s.charAt(0).toUpperCase()+s.slice(1):s}
+    function esc(s){return String(s||'').replace(/[&<>'"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#039;','"':'&quot;'}[c]})}
+    function ymd(d){var p=new Intl.DateTimeFormat('en-CA',{year:'numeric',month:'2-digit',day:'2-digit',timeZone:TZ}).formatToParts(d);var o={};p.forEach(function(x){o[x.type]=x.value});return o.year+'-'+o.month+'-'+o.day}
+    function isToday(e){return ymd(new Date(e.start))===ymd(state.now)||(new Date(e.start)<=state.now&&new Date(e.end)>state.now)}
+    function isPast(e){return new Date(e.end)<=state.now}
+    function isUpcoming(e){return new Date(e.start)>state.now}
+    function status(e){if(isToday(e))return['Hoje','now'];if(isUpcoming(e))return['Próximo','next'];return['Realizado','']}
+    function timeText(e){return e.allDay?'Dia inteiro':fmtTime.format(new Date(e.start))}
+    function card(e){
+      var d=new Date(e.start),s=status(e);
+      return '<article class="event '+(isToday(e)?'today-event':'')+'"><div class="date"><div class="dow">'+esc(fmtWeek.format(d).slice(0,3))+'</div><span class="day">'+fmtDay.format(d)+'</span><div class="mon">'+esc(fmtMon.format(d).replace('.',''))+'</div></div><div><div class="time">'+esc(timeText(e))+'</div><div class="title">'+esc(e.title)+'</div>'+(e.location?'<div class="loc">📍 '+esc(e.location)+'</div>':'')+'</div><div class="status '+s[1]+'">'+s[0]+'</div></article>'
+    }
+    function groupTitle(date){
+      var diff=Math.round((new Date(ymd(date)+'T12:00:00-03:00')-new Date(ymd(state.now)+'T12:00:00-03:00'))/86400000);
+      if(diff===0)return 'Hoje <span>'+esc(fmtDate.format(date))+'</span>';
+      if(diff===1)return 'Amanhã <span>'+esc(fmtDate.format(date))+'</span>';
+      return cap(fmtWeek.format(date))+' <span>'+esc(fmtDate.format(date))+'</span>'
+    }
+    function renderAgenda(){
+      var root=document.getElementById('agenda'),events=state.events.slice().sort(function(a,b){return new Date(a.start)-new Date(b.start)});
+      if(state.filter==='today')events=events.filter(isToday);
+      if(state.filter==='upcoming')events=events.filter(function(e){return !isPast(e)});
+      if(state.filter==='all'){var future=events.filter(function(e){return !isPast(e)});var past=events.filter(isPast).slice(-4);events=past.concat(future)}
+      if(!events.length){root.innerHTML='<div class="empty"><strong>Nenhum compromisso cadastrado</strong>Assim que a agenda receber um evento para este período, ele aparecerá aqui automaticamente.</div>';return}
+      var groups={};events.forEach(function(e){var k=ymd(new Date(e.start));(groups[k]||(groups[k]=[])).push(e)});
+      root.innerHTML=Object.keys(groups).sort().map(function(k){var d=new Date(k+'T12:00:00-03:00');return '<section class="group"><div class="group-title">'+groupTitle(d)+'</div><div class="event-list">'+groups[k].map(card).join('')+'</div></section>'}).join('')
+    }
+    function renderMap(){
+      markerLayer.clearLayers();routeLayer.clearLayers();
+      var m=state.events.filter(function(e){return Number.isFinite(Number(e.lat))&&Number.isFinite(Number(e.lng))}).sort(function(a,b){return new Date(a.start)-new Date(b.start)});
+      var up=m.filter(function(e){return !isPast(e)}),sel=up.length?up:m.slice(-5),mode=up.length?'Próximos deslocamentos':'Últimos deslocamentos cadastrados';
+      document.getElementById('mapSubtitle').textContent=sel.length?mode+' a partir da agenda.':'Nenhum local mapeável cadastrado no momento.';
+      document.getElementById('mapFoot').innerHTML='<strong>'+mode+'</strong>'+(sel.length?sel.length+' ponto'+(sel.length>1?'s':'')+' no mapa.':'Cadastre uma cidade ou endereço no evento.');
+      if(!sel.length){map.setView([-18.65,-44.25],6);return}
+      var pts=[];
+      sel.forEach(function(e,i){var lat=Number(e.lat),lng=Number(e.lng);pts.push([lat,lng]);var icon=L.divIcon({className:'route-marker',html:'<div class="pin '+(isToday(e)?'current':'')+'"><span>'+(i+1)+'</span></div>',iconSize:[30,30],iconAnchor:[9,26],popupAnchor:[5,-24]});L.marker([lat,lng],{icon:icon}).bindPopup('<strong>'+esc(e.title)+'</strong><br>'+esc(e.location||'Minas Gerais')+'<br><small>'+esc(fmtDate.format(new Date(e.start)))+'</small>').addTo(markerLayer)});
+      if(pts.length>1){L.polyline(pts,{color:'#17a05d',weight:4,opacity:.8,dashArray:'8 10',lineCap:'round'}).addTo(routeLayer);map.fitBounds(L.latLngBounds(pts).pad(.22),{maxZoom:8})}else{map.setView(pts[0],8)}
+    }
+    function apply(data){
+      state.events=(data.events||[]).map(function(e){e.lat=e.lat===null||e.lat===''?null:Number(e.lat);e.lng=e.lng===null||e.lng===''?null:Number(e.lng);return e});
+      if(data.now)state.now=new Date(data.now);
+      document.getElementById('todayDate').textContent=fmtDate.format(state.now);
+      document.getElementById('todayWeek').textContent=cap(fmtWeek.format(state.now));
+      document.getElementById('updated').textContent=data.mode==='snapshot'?'Prévia • integração pendente':'Atualizado '+fmtTime.format(new Date(data.updatedAt||Date.now()));
+      renderAgenda();renderMap()
+    }
+    document.querySelectorAll('.tab').forEach(function(btn){btn.addEventListener('click',function(){document.querySelectorAll('.tab').forEach(function(b){b.classList.remove('active')});btn.classList.add('active');state.filter=btn.getAttribute('data-filter');renderAgenda()})});
+    function load(){
+      var api=String((window.AGENDA_CONFIG&&window.AGENDA_CONFIG.apiUrl)||'').trim();
+      if(!api){SNAPSHOT.now=new Date().toISOString();apply(SNAPSHOT);return}
+      var cb='__agendaRaphael_'+Date.now()+'_'+Math.floor(Math.random()*100000),s=document.createElement('script'),done=false,timer;
+      function cleanup(){if(done)return;done=true;if(timer)clearTimeout(timer);try{delete window[cb]}catch(e){window[cb]=undefined}if(s.parentNode)s.parentNode.removeChild(s)}
+      window[cb]=function(data){cleanup();if(data&&!data.error){data.mode='live';apply(data)}else{SNAPSHOT.now=new Date().toISOString();apply(SNAPSHOT)}};
+      s.onerror=function(){cleanup();SNAPSHOT.now=new Date().toISOString();apply(SNAPSHOT)};
+      s.src=api+(api.indexOf('?')>=0?'&':'?')+'callback='+encodeURIComponent(cb)+'&t='+Date.now();
+      document.head.appendChild(s);
+      timer=setTimeout(function(){cleanup();SNAPSHOT.now=new Date().toISOString();apply(SNAPSHOT)},12000)
+    }
+    load();
+  </script>
+</body>
+</html>
