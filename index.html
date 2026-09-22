@@ -106,8 +106,7 @@
       }
       var day=ymd(new Date(e.start));
       var title=norm(e.title);
-      var location=norm(e.location).replace(/\bbrasil\b/g,'').replace(/\bmg\b/g,'').trim();
-      return day+'|'+title+'|'+location;
+      return day+'|'+title;
     }
     function mergeSeptemberArchive(events){
       var byKey={};
