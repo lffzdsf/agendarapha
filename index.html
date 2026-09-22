@@ -100,11 +100,23 @@
       {id:'3bp61v22pej9l1pveble6g0f3o',title:'Congresso Almenara',location:'Almenara, MG, Brasil',start:'2026-09-26T00:00:00-03:00',end:'2026-09-27T00:00:00-03:00',allDay:true,lat:-16.1834,lng:-40.6944},
       {id:'5vu1f704sde2p3j4bej7ceetfs',title:'Corrida Almenara',location:'Almenara, MG, Brasil',start:'2026-09-27T00:00:00-03:00',end:'2026-09-28T00:00:00-03:00',allDay:true,lat:-16.1834,lng:-40.6944}
     ];
+    function eventMergeKey(e){
+      function norm(s){
+        return String(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,' ').trim();
+      }
+      var day=ymd(new Date(e.start));
+      var title=norm(e.title);
+      var location=norm(e.location).replace(/\bbrasil\b/g,'').replace(/\bmg\b/g,'').trim();
+      return day+'|'+title+'|'+location;
+    }
     function mergeSeptemberArchive(events){
-      var byId={};
-      SEPTEMBER_ARCHIVE.forEach(function(e){byId[e.id]=Object.assign({},e)});
-      (events||[]).forEach(function(e){byId[e.id]=Object.assign({},byId[e.id]||{},e)});
-      return Object.keys(byId).map(function(k){return byId[k]}).sort(function(a,b){return new Date(a.start)-new Date(b.start)});
+      var byKey={};
+      SEPTEMBER_ARCHIVE.forEach(function(e){byKey[eventMergeKey(e)]=Object.assign({},e)});
+      (events||[]).forEach(function(e){
+        var k=eventMergeKey(e),base=byKey[k]||{};
+        byKey[k]=Object.assign({},base,e);
+      });
+      return Object.keys(byKey).map(function(k){return byKey[k]}).sort(function(a,b){return new Date(a.start)-new Date(b.start)});
     }
     var SNAPSHOT={
       mode:'snapshot',
