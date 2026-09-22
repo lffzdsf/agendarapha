@@ -38,8 +38,10 @@ function getAgendaData() {
   if (!cal) throw new Error('Calendário não encontrado ou sem permissão de leitura.');
 
   const now = new Date();
-  const start = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-  const end = new Date(now.getTime() + 21 * 24 * 60 * 60 * 1000);
+  const start = new Date('2026-09-01T00:00:00-03:00');
+  const rollingEnd = new Date(now.getTime() + 21 * 24 * 60 * 60 * 1000);
+  const campaignEnd = new Date('2026-10-05T23:59:59-03:00');
+  const end = rollingEnd > campaignEnd ? rollingEnd : campaignEnd;
   const events = cal.getEvents(start, end);
 
   const data = events.map(function(event) {
